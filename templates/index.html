@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Category Predictor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            text-align: center;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 70%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4caf50;
+            color: #ffffff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        #categoryPredictionResult, #idPredictionResult {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Category Predictor</h2>
+        <form id="predictForm">
+            <input type="text" id="title" name="title" placeholder="Введите название товара">
+            <button type="button" onclick="predict()">Predict</button>
+        </form>
+        <div id="categoryPredictionResult"></div>
+        <div id="idPredictionResult"></div>
+    </div>
+
+    <script>
+        function predict() {
+            var title = document.getElementById('title').value;
+
+            // Отправка POST-запроса на сервер для предсказания категории товара
+            fetch('/predict_category', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title: title }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('categoryPredictionResult').innerHTML = '<p>Category Prediction: ' + data.category_prediction + '</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            // Отправка POST-запроса на сервер для предсказания ID категории товара
+            fetch('/predict_id', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ title: title }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('idPredictionResult').innerHTML = '<p>ID Prediction: ' + data.id_prediction + '</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</body>
+</html>
+
